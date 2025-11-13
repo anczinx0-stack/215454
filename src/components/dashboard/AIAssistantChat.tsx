@@ -508,25 +508,91 @@ export default function AIAssistantChat() {
     return 'I\'m not sure about that specific question. I can help you with:\n\n- Issuing credentials\n- Verifying credentials\n- Understanding soulbound tokens\n- Revoking credentials\n- Wallet connection\n- Pricing plans\n- Blockchain security\n- IPFS and document storage\n- Getting testnet ETH\n\nPlease ask me about any of these topics!';
   };
 
+export default function AIAssistantChat() {
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: '1',
+      role: 'assistant',
+      content: 'Hello! I\'m your AI assistant for the Academic Credentials Platform. I can help you with questions about credential issuance, verification, blockchain technology, and platform features. How can I assist you today?',
+      timestamp: new Date()
+    }
+  ]);
+  const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const findBestMatch = (query: string): string => {
+    const normalizedQuery = query.toLowerCase().trim();
+
+    for (const [key, answer] of Object.entries(platformKnowledge)) {
+      if (normalizedQuery.includes(key) || key.includes(normalizedQuery)) {
+        return answer;
+      }
+    }
+
+    if (normalizedQuery.includes('credential') && normalizedQuery.includes('issue')) {
+      return platformKnowledge['how do i issue a credential'];
+    }
+    if (normalizedQuery.includes('verify') || normalizedQuery.includes('verification')) {
+      return platformKnowledge['how do students verify their credentials'];
+    }
+    if (normalizedQuery.includes('soulbound') || normalizedQuery.includes('sbt')) {
+      return platformKnowledge['what is a soulbound token'];
+    }
+    if (normalizedQuery.includes('revoke') || normalizedQuery.includes('cancel')) {
+      return platformKnowledge['how do i revoke a credential'];
+    }
+    if (normalizedQuery.includes('wallet') || normalizedQuery.includes('metamask')) {
+      return platformKnowledge['how do i connect my wallet'];
+    }
+    if (normalizedQuery.includes('price') || normalizedQuery.includes('cost') || normalizedQuery.includes('plan')) {
+      return platformKnowledge['what are pricing plans'];
+    }
+    if (normalizedQuery.includes('security') || normalizedQuery.includes('safe')) {
+      return platformKnowledge['how does blockchain security work'];
+    }
+    if (normalizedQuery.includes('ipfs')) {
+      return platformKnowledge['what is ipfs'];
+    }
+    if (normalizedQuery.includes('testnet') || normalizedQuery.includes('sepolia') || normalizedQuery.includes('eth')) {
+      return platformKnowledge['how do i get testnet eth'];
+    }
+
+    return 'I\'m not sure about that specific question. I can help you with:\n\n- Issuing credentials\n- Verifying credentials\n- Understanding soulbound tokens\n- Revoking credentials\n- Wallet connection\n- Pricing plans\n- Blockchain security\n- IPFS and document storage\n- Getting testnet ETH\n\nPlease ask me about any of these topics!';
+  };
+
   const handleSend = async () => {
     if (!input.trim()) return;
+
     const userMessage: Message = {
       id: Date.now().toString(),
       role: 'user',
       content: input,
       timestamp: new Date()
     };
+
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     setLoading(true);
+
     setTimeout(() => {
       const response = findBestMatch(input);
+
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
         content: response,
         timestamp: new Date()
       };
+
       setMessages(prev => [...prev, assistantMessage]);
       setLoading(false);
     }, 500);
@@ -575,6 +641,7 @@ export default function AIAssistantChat() {
           <X className="w-4 h-4" />
         </button>
       </div>
+
       <div className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">
         {messages.map((message) => (
           <div
@@ -601,6 +668,7 @@ export default function AIAssistantChat() {
             </div>
           </div>
         ))}
+
         {loading && (
           <div className="flex justify-start">
             <div className="bg-gray-700 rounded-lg p-3">
@@ -611,8 +679,10 @@ export default function AIAssistantChat() {
             </div>
           </div>
         )}
+
         <div ref={messagesEndRef} />
       </div>
+
       {messages.length === 1 && (
         <div className="px-4 pb-4">
           <p className="text-xs text-gray-400 mb-2">Quick suggestions:</p>
@@ -626,4 +696,33 @@ export default function AIAssistantChat() {
                 {suggestion}
               </button>
             ))}
-          </ |
+          </div>
+        </div>
+      )}
+
+      <div className="p-4 border-t border-gray-700">
+        <div className="flex items-center space-x-2">
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyPress={handleKeyPress}
+            placeholder="Ask me anything..."
+            className="flex-1 bg-gray-700 text-white placeholder-gray-400 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+            disabled={loading}
+          />
+          <button
+            onClick={handleSend}
+            disabled={loading || !input.trim()}
+            className="p-3 bg-green-600 hover:bg-green-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-lg transition-colors"
+          >
+            <Send className="w-5 h-5" />
+          </button>
+        </div>
+        <p className="text-xs text-gray-500 mt-2 text-center">
+          AI responses are based on platform documentation
+        </p>
+      </div>
+    </div>
+  );
+}
