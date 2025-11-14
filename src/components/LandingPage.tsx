@@ -487,27 +487,34 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
         <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-transparent to-green-50/50 pointer-events-none" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div
-            className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-3xl p-12 text-center shadow-2xl backdrop-blur-lg"
+            className="relative rounded-3xl p-12 text-center shadow-2xl overflow-hidden"
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
             whileHover={{ scale: 1.02 }}
           >
-            <h2 className="text-4xl font-bold text-white mb-4">
-              Ready to Transform Academic Verification?
-            </h2>
-            <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-              Join institutions and students worldwide in building a transparent,
-              decentralized ecosystem for academic credentials.
-            </p>
-            <button
-              onClick={onGetStarted}
-              className="px-8 py-4 bg-white text-blue-600 rounded-xl font-semibold hover:bg-blue-50 transition-colors inline-flex items-center shadow-lg hover:shadow-xl"
-            >
-              Get Started Now
-              <ArrowRight className="w-5 h-5 ml-2" />
-            </button>
+            <div className="absolute inset-0 z-0">
+              <img
+                src="https://i.pinimg.com/originals/88/15/63/881563d6444b370fa4ceea0c3183bb4c.gif"
+                alt="Background"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/50 to-black/60"></div>
+              <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-white to-transparent"></div>
+              <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-white to-transparent"></div>
+              <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-white to-transparent"></div>
+              <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-white to-transparent"></div>
+            </div>
+            <div className="relative z-10">
+              <button
+                onClick={onGetStarted}
+                className="px-8 py-4 bg-white text-blue-600 rounded-xl font-semibold hover:bg-blue-50 transition-colors inline-flex items-center shadow-lg hover:shadow-xl"
+              >
+                Get Started Now
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </button>
+            </div>
           </motion.div>
         </div>
       </div>
